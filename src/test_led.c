@@ -16,6 +16,17 @@ static int test_ignore(void) {
     mu_ignored(0);
     mu_end();
 }
+
+static int test_broken(void) {
+    mu_broken(0);
+    mu_end();
+}
+
+static int test_fail(void) {
+    mu_assert(1 == 0);
+    mu_end();
+}
+
 static int test_led(void) {
     mu_assert(PB5 == LED_PIN);
     mu_end();
@@ -25,11 +36,15 @@ int main (void) {
     TRACE_init();
 
     mu_run_test(test_ignore);
+    mu_run_test(test_broken);
+    mu_run_test(test_fail);
     mu_run_test(test_led);
-    int r = mu_tests_run;
+
+    int r = mu_stat.run;
     int f = mu_stat.fail;
-    int b = mu_tests_broken;
-    int i = mu_tests_ignore;
-    T("Tests #=%d  FAIL=%d BROKEN=%d IGNORED=%d", r, f, b, i);
+    int b = mu_stat.broken;
+    int i = mu_stat.ignore;
+    int p = r-f-b-i;
+    T("Tests #=%d  P=%d F=%d B=%d I=%d", r, p, f, b, i);
     return (0);
 }
