@@ -50,7 +50,7 @@ static int test_led(void) {
 
 AU_SETUP;
 
-static void mu_output_setup(void) {
+static void au_output_setup(void) {
   UBRR0H = UBRRH_VALUE;         // defined in setbaud.h & requires BAUD
   UBRR0L = UBRRL_VALUE;
 #if USE_2X
@@ -63,9 +63,8 @@ static void mu_output_setup(void) {
   UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);   // 8 data bits, 1 stop bit
 }
 
-#define usart_txWait() (loop_until_bit_is_set(UCSR0A, UDRE0);)
+#define usart_txWait() {loop_until_bit_is_set(UCSR0A, UDRE0);}
 #define usart_txByte(data) (UDR0 = data)
-
 static void usart_txString(char data[]) {
   uint8_t i = 0;
   while (data[i]) {
@@ -75,13 +74,24 @@ static void usart_txString(char data[]) {
   }
 }
 
-static void mu_output(void) {
+static void au_output(void) {
+    const buff_size = 80;
+    char buff[buff_size];
     int r = AU_STAT.run;
     int f = AU_STAT.fail;
     int b = AU_STAT.broken;
     int i = AU_STAT.ignore;
     int p = r-f-b-i;
-//    T("Tests #=%d  P=%d F=%d B=%d I=%d\n", r, p, f, b, i);
+    snprintf(buff, buff_size, "Tests #=%d  PASS=%d FAIL=%d BROKEN=%d IGNORE=%d\n", r, p, f, b, i);
+    usart_txString(buff);
+
+    snprintf(buff, buff_size, "FAIL ID: ");
+    usart_txString(buff);
+    for (int i =0; i < f; i++) {
+        snprintf(buff, buff_size, "0x%02x ", AU_STAT.failID[i]);
+        usart_txString(buff);
+    }
+
 }
 
 int main (void) {

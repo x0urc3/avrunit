@@ -20,8 +20,8 @@ typedef struct {
 
 #define AU_SETUP stat_t AU_STAT = {0};
 
-#define AU_OUTPUT_SETUP mu_output_setup();
-#define AU_OUTPUT mu_output();
+#define AU_OUTPUT_SETUP au_output_setup();
+#define AU_OUTPUT au_output();
 #define AU_ASSERT(test) do { if (!(test)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(test) do { return AU_F_BROKEN; } while (0)
 #define AU_IGNORED(test) do { return AU_F_IGNORE; } while (0)
