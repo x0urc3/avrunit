@@ -2,12 +2,11 @@
 #define _AVRUNIT_H
 
 #include <avr/io.h>
-#include <avr/eeprom.h>
 
-#define MU_PASS 0
-#define MU_FAIL 1
-#define MU_BROKEN 2
-#define MU_IGNORE 3
+#define AU_F_PASS 0
+#define AU_F_FAIL 1
+#define AU_F_BROKEN 2
+#define AU_F_IGNORE 3
 
 typedef struct {
     uint16_t run;
@@ -19,43 +18,35 @@ typedef struct {
     uint16_t ignoreID[10];
 } stat_t;
 
-/*
-#define mu_setup do { \
-    stat_t EEMEM mu_ee_stat = {0}; \
-    stat_t mu_stat = {0}; \
-    int mu_tests_run = 0; \
-    int mu_tests_fail = 0; \
-    int mu_tests_broken = 0; \
-    int mu_tests_ignore = 0; \
-} while (0)
-*/
-stat_t EEMEM mu_ee_stat = {0};
-stat_t mu_stat = {0};
+#define AU_SETUP stat_t AU_STAT = {0};
 
-#define mu_assert(test) do { if (!(test)) { return MU_FAIL; } } while (0)
-#define mu_broken(test) do { return MU_BROKEN; } while (0)
-#define mu_ignored(test) do { return MU_IGNORE; } while (0)
+#define AU_OUTPUT_SETUP mu_output_setup();
+#define AU_OUTPUT mu_output();
+#define AU_ASSERT(test) do { if (!(test)) { return AU_F_FAIL; } } while (0)
+#define AU_BROKEN(test) do { return AU_F_BROKEN; } while (0)
+#define AU_IGNORED(test) do { return AU_F_IGNORE; } while (0)
 
-#define mu_end() do { return MU_PASS; } while(0)
+#define AU_UNIT_START
+#define AU_UNIT_END do { return AU_F_PASS; } while(0)
 
-#define mu_run_test_named(test, ...) do { \
+#define AU_RUN_TEST_NAMED(test, ...) do { \
     int result; \
     result = test(__VA_ARGS__); \
-    mu_stat.run++; \
+    AU_STAT.run++; \
     switch (result) { \
-        case MU_FAIL: \
-            mu_stat.fail += 1; \
+        case AU_F_FAIL: \
+            AU_STAT.fail += 1; \
             break; \
-        case MU_BROKEN: \
-            mu_stat.broken += 1; \
+        case AU_F_BROKEN: \
+            AU_STAT.broken += 1; \
             break; \
-        case MU_IGNORE: \
-            mu_stat.ignore += 1; \
+        case AU_F_IGNORE: \
+            AU_STAT.ignore += 1; \
             break; \
     } \
 } while (0)
 
-#define mu_run_test(test, ...) mu_run_test_named (test, __VA_ARGS__)
+#define AU_RUN_TEST(test, ...) AU_RUN_TEST_NAMED(test, __VA_ARGS__)
 
 
 #endif // _AVRUNIT_H
