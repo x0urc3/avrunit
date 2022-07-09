@@ -29,24 +29,24 @@ typedef struct {
 #define AU_UNIT_START
 #define AU_UNIT_END do { return AU_F_PASS; } while(0)
 
-#define AU_RUN_TEST_NAMED(test, ...) do { \
+#define AU_RUN_TEST(id, test, ...) do { \
     int result; \
     result = test(__VA_ARGS__); \
     AU_STAT.run++; \
     switch (result) { \
         case AU_F_FAIL: \
+            AU_STAT.failID[AU_STAT.fail] = id; \
             AU_STAT.fail += 1; \
             break; \
         case AU_F_BROKEN: \
+            AU_STAT.brokenID[AU_STAT.broken] = id; \
             AU_STAT.broken += 1; \
             break; \
         case AU_F_IGNORE: \
+            AU_STAT.ignoreID[AU_STAT.ignore] = id; \
             AU_STAT.ignore += 1; \
             break; \
     } \
 } while (0)
-
-#define AU_RUN_TEST(test, ...) AU_RUN_TEST_NAMED(test, __VA_ARGS__)
-
 
 #endif // _AVRUNIT_H
