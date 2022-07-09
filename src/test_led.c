@@ -1,20 +1,10 @@
 #include "avrunit.h"
-//#include "trace.h"
 #include "led.h"
+#include <stdio.h>
 #ifndef BAUD
 #define BAUD  9600              // Set a safe default baud rate
 #endif
 #include <util/setbaud.h>
-
-
-//#define LED_PIN PB5
-//void initLED(void) {
-//    DDRB |= _BV(LED_PIN);
-//}
-//
-//void toggleLED(void) {
-//    PORTB ^= _BV(LED_PIN);
-//}
 
 static int test_ignore(void) {
     AU_UNIT_START;
@@ -48,6 +38,15 @@ static int test_led(void) {
     AU_UNIT_END;
 }
 
+static int test_init_led(void) {
+    AU_UNIT_START;
+
+    initLED();
+    AU_ASSERT(DDRB == _BV(PB5));
+
+    AU_UNIT_END;
+}
+
 AU_SETUP;
 
 static void au_output_setup(void) {
@@ -75,7 +74,7 @@ static void usart_txString(char data[]) {
 }
 
 static void au_output(void) {
-    const buff_size = 80;
+    const int buff_size = 80;
     char buff[buff_size];
     int r = AU_STAT.run;
     int f = AU_STAT.fail;
@@ -101,6 +100,7 @@ int main (void) {
     AU_RUN_TEST(0x01, test_broken);
     AU_RUN_TEST(0x02, test_fail);
     AU_RUN_TEST(0xa0, test_led);
+    AU_RUN_TEST(0xa1, test_init_led);
 
     AU_OUTPUT;
 
