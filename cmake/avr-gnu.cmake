@@ -69,6 +69,7 @@ function(add_avr_executable FIRMWARE SOURCE_FILE)
 
     target_compile_options(${FIRMWARE} PRIVATE
         -mmcu=${AVR_MCU} # AVR_MCU
+        -Os
         -std=gnu11
         -Wall # enable warnings
         -Wstrict-prototypes
