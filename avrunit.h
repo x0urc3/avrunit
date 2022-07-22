@@ -3,6 +3,7 @@
 
 #include <avr/io.h>
 
+#define AU_MAX_TEST 10
 #define AU_F_PASS 0
 #define AU_F_FAIL 1
 #define AU_F_BROKEN 2
@@ -13,9 +14,9 @@ typedef struct {
     uint16_t fail;
     uint16_t broken;
     uint16_t ignore;
-    uint16_t failID[10];
-    uint16_t brokenID[10];
-    uint16_t ignoreID[10];
+    uint16_t failID[AU_MAX_TEST];
+    uint16_t brokenID[AU_MAX_TEST];
+    uint16_t ignoreID[AU_MAX_TEST];
 } stat_t;
 
 #define AU_SETUP stat_t AU_STAT = {0};
