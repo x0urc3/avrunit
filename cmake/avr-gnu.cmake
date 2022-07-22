@@ -54,9 +54,7 @@ function(add_avr_target FIRMWARE)
 
 endfunction(add_avr_target)
 
-function(add_avr_executable FIRMWARE SOURCE_FILE)
-    add_executable(${FIRMWARE} ${SOURCE_FILE})
-
+function(setup_avr_executable FIRMWARE)
     target_compile_definitions(${FIRMWARE} PRIVATE
         -DF_CPU=${AVR_MCU_F}
         -DBAUD=${AVR_BAUD}
@@ -96,4 +94,4 @@ function(add_avr_executable FIRMWARE SOURCE_FILE)
         PROPERTIES ADDITIONAL_CLEAN_FILES "${FIRMWARE}.hex;${FIRMWARE}.eeprom"
         )
 
-endfunction(add_avr_executable)
+endfunction(setup_avr_executable)
