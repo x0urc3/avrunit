@@ -54,8 +54,8 @@ function(add_avr_target FIRMWARE)
 
 endfunction(add_avr_target)
 
-function(add_avr_executable FIRMWARE)
-    add_executable(${FIRMWARE} src/yatl.c)
+function(add_avr_executable FIRMWARE SOURCE_FILE)
+    add_executable(${FIRMWARE} ${SOURCE_FILE})
 
     target_compile_definitions(${FIRMWARE} PRIVATE
         -DF_CPU=${AVR_MCU_F}
