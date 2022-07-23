@@ -95,7 +95,7 @@ function(setup_avr_executable FIRMWARE)
     add_avr_target(${FIRMWARE})
 
     set_directory_properties(
-        PROPERTIES ADDITIONAL_CLEAN_FILES "${FIRMWARE}.hex;${FIRMWARE}.eeprom"
+        PROPERTIES ADDITIONAL_CLEAN_FILES "${FIRMWARE}.hex;${FIRMWARE}.eep"
         )
 
 endfunction(setup_avr_executable)
