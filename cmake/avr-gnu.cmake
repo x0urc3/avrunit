@@ -28,6 +28,10 @@ find_program(TOOL_SIZE avr-size REQUIRED DOC "Set binary size tool. Default: avr
 find_program(TOOL_STRIP avr-strip REQUIRED DOC "Set binary strip tool. Default: avr-strip")
 
 function(add_avr_target FIRMWARE)
+    if(TARGET hex)
+        return()
+    endif()
+
     add_custom_target(hex
         ALL ${CMAKE_OBJCOPY} -R .eeprom -O ihex ${FIRMWARE}.elf ${FIRMWARE}.hex
         DEPENDS ${FIRMWARE}
