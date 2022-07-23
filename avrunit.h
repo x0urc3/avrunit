@@ -2,6 +2,7 @@
 #define _AVRUNIT_H
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 
 #define AU_MAX_TEST 10
 #define AU_F_PASS 0
@@ -21,8 +22,8 @@ typedef struct {
 
 #define AU_SETUP stat_t AU_STAT = {0};
 
-#define AU_OUTPUT_SETUP au_output_setup();
-#define AU_OUTPUT au_output();
+#define AU_OUTPUT_SETUP
+#define AU_OUTPUT eeprom_write_block(&AU_STAT,0,sizeof(AU_STAT));
 #define AU_ASSERT(test) do { if (!(test)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(test) do { return AU_F_BROKEN; } while (0)
 #define AU_IGNORED(test) do { return AU_F_IGNORE; } while (0)
