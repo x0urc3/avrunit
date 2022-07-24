@@ -11,19 +11,29 @@
 #define AU_F_IGNORE 3
 
 typedef struct {
-    uint16_t run;
-    uint16_t fail;
-    uint16_t broken;
-    uint16_t ignore;
-    uint16_t failID[AU_MAX_TEST];
-    uint16_t brokenID[AU_MAX_TEST];
-    uint16_t ignoreID[AU_MAX_TEST];
+    uint8_t fail;
+    uint8_t failID[AU_MAX_TEST];
+    uint8_t broken;
+    uint8_t brokenID[AU_MAX_TEST];
+    uint8_t ignore;
+    uint8_t ignoreID[AU_MAX_TEST];
+    uint8_t run;
 } stat_t;
 
-#define AU_SETUP stat_t AU_STAT = {0};
+stat_t AU_STAT = {0};
+uint8_t AU_STAT_FMT[] = {
+    7,              // Number of record
+    1, AU_MAX_TEST,
+    1, AU_MAX_TEST,
+    1, AU_MAX_TEST,
+    1
+};
 
-#define AU_OUTPUT_SETUP
-#define AU_OUTPUT eeprom_write_block(&AU_STAT,0,sizeof(AU_STAT));
+#define AU_OUTPUT_SETUP()
+#define AU_OUTPUT() do { \
+    eeprom_write_block(&AU_STAT_FMT, 0, sizeof(AU_STAT_FMT)); \
+    eeprom_write_block(&AU_STAT, sizeof(AU_STAT_FMT), sizeof(AU_STAT)); \
+} while (0)
 #define AU_ASSERT(test) do { if (!(test)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(test) do { return AU_F_BROKEN; } while (0)
 #define AU_IGNORED(test) do { return AU_F_IGNORE; } while (0)
