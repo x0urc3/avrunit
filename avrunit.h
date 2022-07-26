@@ -26,7 +26,8 @@ typedef struct {
 stat_t AU_STAT[AU_F_SIZE];
 
 typedef struct {
-    char label[2];
+    char label_index[2];
+    char label_id[2];
 } stat_fmt_t;
 
 stat_fmt_t AU_STAT_FMT[AU_F_SIZE] = {
