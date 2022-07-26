@@ -1,3 +1,10 @@
+/*
+ * avrunit.h Copyright (c) 2022 Khairulmizam Samsudin <xource@gmail.com
+ *
+ * A unit test framework for AVR based microcontroller
+ *
+ */
+
 #ifndef _AVRUNIT_H
 #define _AVRUNIT_H
 
