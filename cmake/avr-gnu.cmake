@@ -56,6 +56,9 @@ function(add_avr_target FIRMWARE)
     add_custom_target(show_fuses ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -U lfuse:r:-:h -U hfuse:r:-:h -U efuse:r:-:h -U lock:r:-:h
         )
 
+    add_custom_target(avrdude_terminal ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -t
+        )
+
 endfunction(add_avr_target)
 
 function(setup_avr_executable FIRMWARE)
