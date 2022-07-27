@@ -16,7 +16,10 @@ function(add_avr_test FIRMWARE)
         COMMAND ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -U eeprom:r:${FIRMWARE}.bin:r
         )
 
-    find_package(Python 3)
+    if (NOT Python)
+        find_package(Python 3)
+    endif ()
+
     if (Python_FOUND)
         add_test(NAME TestSimple
             COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/../scripts/avrunit-result.py ${FIRMWARE}.bin)
