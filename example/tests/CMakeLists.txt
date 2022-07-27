@@ -19,5 +19,10 @@ add_custom_command(TARGET ${FIRMWARE} POST_BUILD
     COMMAND ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -U eeprom:r:${FIRMWARE}.bin:r
     )
 
-#execute_process(COMMAND ${CMAKE_COMMAND} -E echo test)
-#add_test(NAME TestSimple COMMAND tests)
+find_package(Python 3)
+if (Python_FOUND)
+    add_test(NAME TestSimple
+        COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/../scripts/avrunit-result.py ${FIRMWARE}.bin)
+else()
+    message(WARNING "Python3 unavailable. Manually build avrunit test and dump EEPROM")
+endif()
