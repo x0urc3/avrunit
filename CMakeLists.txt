@@ -4,7 +4,8 @@ include(FetchContent)
 FetchContent_Declare(
     toolchain
     GIT_REPOSITORY https://github.com/x0urc3/avr-toolchain.cmake.git
-    GIT_TAG        4e7f5e09fa060d3335451613e37d33cb5575a74d
+    GIT_TAG 4e7f5e09fa060d3335451613e37d33cb5575a74d
+    GIT_SHALLOW TRUE
     )
 FetchContent_MakeAvailable(toolchain)
 set(CMAKE_TOOLCHAIN_FILE ${toolchain_SOURCE_DIR}/avr-toolchain.cmake CACHE STRING "")
