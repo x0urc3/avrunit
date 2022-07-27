@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/avr-gnu.cmake CACHE STRING "")
+include(FetchContent)
+FetchContent_Declare(
+    toolchain
+    GIT_REPOSITORY https://github.com/x0urc3/avr-toolchain.cmake.git
+    GIT_TAG        4e7f5e09fa060d3335451613e37d33cb5575a74d
+    )
+FetchContent_MakeAvailable(toolchain)
+set(CMAKE_TOOLCHAIN_FILE ${toolchain_SOURCE_DIR}/avr-toolchain.cmake CACHE STRING "")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(avrunit)
