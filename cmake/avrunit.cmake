@@ -21,7 +21,7 @@ function(add_avr_test FIRMWARE)
     endif ()
 
     if (Python_FOUND)
-        add_test(NAME TestSimple
+        add_test(NAME AU_T_${FIRMWARE}
             COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/../scripts/avrunit-result.py ${FIRMWARE}.bin)
     else()
         message(WARNING "Python3 unavailable. Manually build avrunit test and dump EEPROM")
