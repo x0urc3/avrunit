@@ -31,10 +31,10 @@ typedef struct {
 } stat_fmt_t;
 
 stat_fmt_t AU_STAT_FMT[AU_F_SIZE] = {
-    {"P", "ID"},
-    {"F", "ID"},
-    {"B", "ID"},
-    {"I", "ID"}
+    {"P ", "ID"},
+    {"F ", "ID"},
+    {"B ", "ID"},
+    {"I ", "ID"}
 };
 
 #define AU_OUTPUT_SETUP()
