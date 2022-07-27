@@ -23,8 +23,15 @@ function(add_avr_test FIRMWARE)
     if (Python_FOUND)
         add_test(NAME AU_T_${FIRMWARE}
             COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/../scripts/avrunit-result.py ${FIRMWARE}.bin)
+
     else()
         message(WARNING "Python3 unavailable. Manually build avrunit test and dump EEPROM")
     endif()
 
+endfunction()
+
+function(set_avr_test_will_fail FIRMWARE)
+    set_property(TEST AU_T_${FIRMWARE}
+        PROPERTY WILL_FAIL TRUE
+        )
 endfunction()
