@@ -1,9 +1,4 @@
 function(add_avr_test FIRMWARE)
-    add_custom_command(TARGET ${FIRMWARE} POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -R .eeprom -O ihex ${FIRMWARE}.elf ${FIRMWARE}.hex
-        COMMAND ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -U flash:w:${FIRMWARE}.hex
-        )
-
     if(NOT DEFINED AU_TEST_DELAY)
         set(AU_TEST_DELAY 2)
     endif()
