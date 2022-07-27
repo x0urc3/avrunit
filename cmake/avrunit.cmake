@@ -1,6 +1,4 @@
 function(add_avr_test FIRMWARE)
-    set_property(TARGET ${FIRMWARE}
-        PROPERTY EXCLUDE_FROM_ALL)
     add_custom_command(TARGET ${FIRMWARE} POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -R .eeprom -O ihex ${FIRMWARE}.elf ${FIRMWARE}.hex
         COMMAND ${TOOL_UPLOAD} ${TOOL_UPLOAD_ARGS} -p ${AVR_MCU} -U flash:w:${FIRMWARE}.hex
