@@ -14,7 +14,7 @@ function(add_avr_test FIRMWARE)
     endif ()
 
     if (Python_FOUND)
-        add_test(NAME AU_T_${FIRMWARE}
+        add_test(NAME ${FIRMWARE}
             COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/avrunit-result.py ${FIRMWARE}.bin)
 
     else()
