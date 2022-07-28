@@ -4,7 +4,8 @@ include(FetchContent)
 FetchContent_Declare(
     toolchain
     GIT_REPOSITORY https://github.com/x0urc3/avr-toolchain.cmake.git
-    GIT_TAG 0c5db3feb7e5c3527524375fd78026161e5fbe85
+    GIT_TAG e41c890d62f03f7da6bcb5da064d3bfb4ba9edf9
+    GIT_REMOTE_UPDATE_STRATEGY CHECKOUT
     GIT_SHALLOW TRUE
     )
 FetchContent_MakeAvailable(toolchain)

@@ -4,7 +4,7 @@ function(add_avr_test FIRMWARE)
     endif()
 
     add_test(NAME AU_upload
-        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR} --target upload
+        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR} --target upload_${FIRMWARE}
         )
     set_tests_properties(AU_upload PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
 
@@ -14,7 +14,7 @@ function(add_avr_test FIRMWARE)
     set_tests_properties(AU_wait PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
 
     add_test(NAME AU_get_result
-        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR} --target dump_eeprom
+        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR} --target dump_eeprom_${FIRMWARE}
         )
     set_tests_properties(AU_get_result PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
 
