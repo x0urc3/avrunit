@@ -1,3 +1,20 @@
+set(AVRUNIT_RUNTEST_DEFAULT ON CACHE STRING "Store avrunit result in AVR EEPROM")
+if (AVRUNIT_RUNTEST_DEFAULT)
+    if (NOT Python)
+        find_package(Python 3)
+    endif ()
+
+    if (Python_FOUND)
+        set(AVRUNIT_DEFAULT_RUNTEST_CMD
+            ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/avrunit-result.py
+            )
+    else()
+        message(WARNING "Python3 unavailable. Inspect avrunit test result from EEPROM")
+    endif()
+endif()
+
+set(AVRUNIT_RUNTEST_CMD ${AVRUNIT_DEFAULT_RUNTEST_CMD} CACHE STRING "Test command line")
+
 function(add_avr_test FIRMWARE)
     if(NOT DEFINED AU_TEST_DELAY)
         set(AU_TEST_DELAY 2)
@@ -18,20 +35,10 @@ function(add_avr_test FIRMWARE)
         )
     set_tests_properties(AU_get_result PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
 
-
-    if (NOT Python)
-        find_package(Python 3)
-    endif ()
-
-    if (Python_FOUND)
-        add_test(NAME ${FIRMWARE}
-            COMMAND ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/avrunit-result.py ${FIRMWARE}.bin)
-        set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
-
-    else()
-        message(WARNING "Python3 unavailable. Inspect avrunit test result from EEPROM")
-    endif()
-
+    add_test(NAME ${FIRMWARE}
+        COMMAND ${AVRUNIT_RUNTEST_CMD} $<$<BOOL:AVRUNIT_RUNTEST_DEFAULT>:${FIRMWARE}.bin>
+        )
+    set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
 endfunction()
 
 function(set_avr_test_will_fail FIRMWARE)
