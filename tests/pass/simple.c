@@ -1,4 +1,4 @@
-#include "../../avrunit.h"
+#include "avrunit.h"
 
 static int test_ignore(void) {
     AU_UNIT_START;

@@ -15,6 +15,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include(avrunit)
 
 project("avrunit")
+add_library(avrunit INTERFACE)
+target_include_directories(avrunit INTERFACE ${CMAKE_SOURCE_DIR})
 
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     enable_testing()
