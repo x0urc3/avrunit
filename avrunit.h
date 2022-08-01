@@ -40,9 +40,9 @@ stat_fmt_t AU_STAT_FMT[AU_F_SIZE] = {
 #define AU_OUTPUT_SETUP()
 #define AU_OUTPUT() do { \
     int addr = 0; \
-    eeprom_write_block(&AU_STAT, addr, sizeof(AU_STAT)); \
+    eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT)); \
     addr = sizeof(AU_STAT); \
-    eeprom_write_block(&AU_STAT_FMT, addr, sizeof(AU_STAT_FMT)); \
+    eeprom_write_block(&AU_STAT_FMT, (void *)addr, sizeof(AU_STAT_FMT)); \
 } while (0)
 #define AU_ASSERT(TEST) do { if (!(TEST)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(TEST) do { return AU_F_BROKEN; } while (0)
