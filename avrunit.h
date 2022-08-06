@@ -11,6 +11,10 @@
 #include <avr/io.h>
 #include <avr/eeprom.h>
 
+#ifndef AU_EEPROM_START
+#define AU_EEPROM_START 0
+#endif
+
 #define AU_MAX_TEST 10
 #define AU_F_PASS 0
 #define AU_F_FAIL 1
@@ -37,13 +41,19 @@ stat_fmt_t AU_STAT_FMT[AU_F_SIZE] = {
     {"I ", "ID"}
 };
 
+static void au_output_eeprom(void) {
+    int addr = AU_EEPROM_START;
+    eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
+    addr = sizeof(AU_STAT);
+    eeprom_write_block(&AU_STAT_FMT, (void *)addr, sizeof(AU_STAT_FMT));
+}
+
+static void au_output(void) {
+    au_output_eeprom();
+}
+
 #define AU_OUTPUT_SETUP()
-#define AU_OUTPUT() do { \
-    int addr = 0; \
-    eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT)); \
-    addr = sizeof(AU_STAT); \
-    eeprom_write_block(&AU_STAT_FMT, (void *)addr, sizeof(AU_STAT_FMT)); \
-} while (0)
+#define AU_OUTPUT() au_output()
 #define AU_ASSERT(TEST) do { if (!(TEST)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(TEST) do { return AU_F_BROKEN; } while (0)
 #define AU_IGNORED(TEST) do { return AU_F_IGNORE; } while (0)
