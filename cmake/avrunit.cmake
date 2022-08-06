@@ -1,6 +1,11 @@
 set(AVRUNIT_RUNTEST_OUTPUT "EEPROM" CACHE STRING "Set result output")
 set_property(CACHE AVRUNIT_RUNTEST_OUTPUT PROPERTY STRINGS "EEPROM" "Serial" "Custom")
 
+if (AVR_BOARD_TYPE STREQUAL "Arduino")
+    set(AVRUNIT_RUNTEST_OUTPUT "Serial" CACHE STRING "Set result output" FORCE)
+    message(WARNING "AVRUNIT_RUNTEST_OUTPUT=Serial since Arduino does not support EEPROM dump")
+endif()
+
 if (NOT AVRUNIT_RUNTEST_OUTPUT STREQUAL "Custom")
     if (NOT Python)
         find_package(Python 3)
@@ -21,6 +26,12 @@ if(NOT AVRUNIT_DEFAULT_RUNTEST_CMD)
 endif()
 
 function(add_avr_test FIRMWARE)
+    if (AVR_BOARD_TYPE STREQUAL "Arduino")
+        target_compile_definitions(${FIRMWARE} PRIVATE
+            -DAU_SERIAL
+            )
+    endif()
+
     if(NOT DEFINED AU_TEST_DELAY)
         set(AU_TEST_DELAY 2)
     endif()
@@ -42,6 +53,13 @@ function(add_avr_test FIRMWARE)
         set_tests_properties(AU_get_result PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
         add_test(NAME ${FIRMWARE}
             COMMAND ${AVRUNIT_RUNTEST_CMD} ${FIRMWARE}.bin
+            )
+        set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
+    endif()
+
+    if (AVRUNIT_RUNTEST_OUTPUT STREQUAL "Serial")
+        add_test(NAME ${FIRMWARE}
+            COMMAND ${AVRUNIT_RUNTEST_CMD}
             )
         set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
     endif()

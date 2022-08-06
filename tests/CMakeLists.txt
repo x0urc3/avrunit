@@ -1,2 +1,5 @@
-add_subdirectory(pass)
-add_subdirectory(fail)
+add_subdirectory(result)
+if(NOT AVR_BOARD_ARDUINO)
+    add_subdirectory(pass)
+    add_subdirectory(fail)
+endif()
