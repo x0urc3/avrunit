@@ -14,7 +14,7 @@ if (NOT AVRUNIT_RUNTEST_OUTPUT STREQUAL "Custom")
     if (Python_FOUND)
         set(AVRUNIT_DEFAULT_RUNTEST_CMD
             ${Python_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/avrunit-result.py
-            )
+            CACHE STRING "Default test command")
     else()
         message(WARNING "Python3 unavailable. Inspect test result from ${AVRUNIT_RUNTEST_OUTPUT}")
     endif()
