@@ -1,10 +1,10 @@
-set(AVRUNIT_RUNTEST_OUTPUT "EEPROM" CACHE STRING "Set result output")
-set_property(CACHE AVRUNIT_RUNTEST_OUTPUT PROPERTY STRINGS "EEPROM" "Serial" "Custom")
-
 if (AVR_BOARD_TYPE STREQUAL "Arduino")
     set(AVRUNIT_RUNTEST_OUTPUT "Serial" CACHE STRING "Set result output" FORCE)
     message(WARNING "AVRUNIT_RUNTEST_OUTPUT=Serial since Arduino does not support EEPROM dump")
+else()
+    set(AVRUNIT_RUNTEST_OUTPUT "EEPROM" CACHE STRING "Set result output" FORCE)
 endif()
+set_property(CACHE AVRUNIT_RUNTEST_OUTPUT PROPERTY STRINGS "EEPROM" "Serial" "Custom")
 
 if (NOT AVRUNIT_RUNTEST_OUTPUT STREQUAL "Custom")
     if (NOT Python)
