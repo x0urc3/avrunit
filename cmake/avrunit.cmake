@@ -25,6 +25,10 @@ if(NOT AVRUNIT_DEFAULT_RUNTEST_CMD)
     message(WARNING "Set test command in AVRUNIT_RUNTEST_CMD")
 endif()
 
+function(set_avr_test_delay DELAY)
+    set(AU_TEST_DELAY 2)
+endfunction()
+
 function(add_avr_test FIRMWARE)
     if (AVR_BOARD_TYPE STREQUAL "Arduino")
         target_compile_definitions(${FIRMWARE} PRIVATE
@@ -32,19 +36,17 @@ function(add_avr_test FIRMWARE)
             )
     endif()
 
-    if(NOT DEFINED AU_TEST_DELAY)
-        set(AU_TEST_DELAY 2)
-    endif()
-
     add_test(NAME AU_upload
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR} --target upload_${FIRMWARE}
         )
     set_tests_properties(AU_upload PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
 
-    add_test(NAME AU_wait
-        COMMAND ${CMAKE_COMMAND} -E sleep ${AU_TEST_DELAY}
-        )
-    set_tests_properties(AU_wait PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
+    if(DEFINED AU_TEST_DELAY)
+        add_test(NAME AU_wait
+            COMMAND ${CMAKE_COMMAND} -E sleep ${AU_TEST_DELAY}
+            )
+        set_tests_properties(AU_wait PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
+    endif()
 
     if (AVRUNIT_RUNTEST_OUTPUT STREQUAL "EEPROM")
         add_test(NAME AU_get_result
