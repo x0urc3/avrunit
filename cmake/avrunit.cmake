@@ -1,4 +1,4 @@
-if (AVR_BOARD_TYPE STREQUAL "Arduino")
+if (AVR_BOARD_ARDUINO)
     set(AVRUNIT_RUNTEST_OUTPUT "Serial" CACHE STRING "Set result output" FORCE)
     message(WARNING "AVRUNIT_RUNTEST_OUTPUT=Serial since Arduino does not support EEPROM dump")
 else()
@@ -26,11 +26,11 @@ if(NOT AVRUNIT_DEFAULT_RUNTEST_CMD)
 endif()
 
 function(set_avr_test_delay DELAY)
-    set(AU_TEST_DELAY 2)
+    set(AU_TEST_DELAY ${DELAY})
 endfunction()
 
 function(add_avr_test FIRMWARE)
-    if (AVR_BOARD_TYPE STREQUAL "Arduino")
+    if (AVR_BOARD_ARDUINO)
         target_compile_definitions(${FIRMWARE} PRIVATE
             -DAU_SERIAL
             )
