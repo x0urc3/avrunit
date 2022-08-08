@@ -9,7 +9,7 @@ set_property(CACHE AVR_BOARD_TYPE PROPERTY STRINGS "None" "Arduino")
 set(AVR_MCU_F 1000000UL CACHE STRING "Set -DF_CPU")
 set(AVR_MCU atmega328p CACHE STRING "Set -mmcu")
 set(TOOL_UPLOAD_ARGS -c stk500v1 -P /dev/ttyUSB0 -b 19200 -q
-    CACHE STRING "Set avrdude arguments: Default: -c stk500v1 -P /dev/ttyUSB0 -b 19200 -q")
+    CACHE STRING "Set avrdude arguments")
 
 if (AVR_BOARD_TYPE STREQUAL "Arduino")
     set(AVR_MCU_F 16000000UL CACHE STRING "Set -DF_CPU" FORCE)
@@ -19,6 +19,9 @@ if (AVR_BOARD_TYPE STREQUAL "Arduino")
         FORCE)
     set(AVR_BOARD_ARDUINO TRUE CACHE STRING "Using Arduino compatible board")
 else()
+    set(TOOL_UPLOAD_ARGS -c stk500v1 -P /dev/ttyUSB0 -b 19200 -q
+        CACHE STRING "Set avrdude arguments"
+        FORCE)
     unset(AVR_BOARD_ARDUINO CACHE)
 endif ()
 
