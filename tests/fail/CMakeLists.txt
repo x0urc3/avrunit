@@ -1,6 +1,6 @@
 add_executable(TEST_fail simple.c)
 target_link_libraries(TEST_fail avrunit)
-setup_avr_executable(TEST_fail)
+setup_avr_target(TEST_fail)
 
 add_avr_test(TEST_fail)
 set_tests_properties(TEST_fail
