@@ -10,18 +10,19 @@ import struct
 AU_F_FAIL = 1
 AU_F_SIZE = 4
 
-stat_t_size = 1 + 10
-
 def help():
     print("USAGE: " + sys.argv[0] + " <file>")
 
-def au_unpack(t_size, fmt, addr, flag_count):
-    res = []
-    for i in range(flag_count):
+def au_unpack(stat_size, t_size, fmt, addr, flag_count):
+
+    res =  [ [0] for i in range(flag_count) ]
+
+    for i in range(stat_size):
         start = addr
         end = start + t_size
-        d = struct.unpack(fmt, data[start:end])
-        res.append(d)
+        flag, id_test = struct.unpack(fmt, data[start:end])
+        res[flag][0] += 1
+        res[flag].append(id_test)
         addr += t_size
     return res
 
@@ -51,8 +52,11 @@ if __name__ == '__main__':
     with open(sys.argv[1], 'rb') as f:
         data = f.read()
 
+    stat_size = struct.unpack('H',data[0:2])[0]
+
     #unpack stat_t
-    stat = au_unpack(stat_t_size, 'B10B', 0, AU_F_SIZE)
+    stat_t_size = 2
+    stat = au_unpack(stat_size, stat_t_size, 'BB', 2, AU_F_SIZE)
 
     print_stat(AU_F_SIZE)
 
