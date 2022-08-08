@@ -23,11 +23,12 @@
 #define AU_F_SIZE 4
 
 typedef struct {
-    uint8_t index;
-    uint8_t id[AU_MAX_TEST];
+    uint8_t flag;
+    uint8_t id;
 } stat_t;
 
-stat_t AU_STAT[AU_F_SIZE];
+stat_t AU_STAT[AU_MAX_TEST];
+uint16_t AU_STAT_SIZE = 0;
 
 #ifdef AU_SERIAL
 #include <util/setbaud.h>
@@ -68,6 +69,8 @@ static void au_output_serial(void) {
 
 static void au_output_eeprom(void) {
     int addr = AU_EEPROM_START;
+    eeprom_write_word((void *)addr, AU_STAT_SIZE);
+    addr = addr + sizeof(AU_STAT_SIZE);
     eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
 }
 
@@ -88,11 +91,9 @@ static void au_output(void) {
 #define AU_UNIT_END do { return AU_F_PASS; } while(0)
 
 #define AU_RUN_TEST(ID, TEST_CASE, ...) do { \
-    int flag, index; \
-    flag = TEST_CASE(__VA_ARGS__); \
-    index = AU_STAT[flag].index; \
-    AU_STAT[flag].id[index] = ID; \
-    AU_STAT[flag].index = index + 1; \
+    AU_STAT[AU_STAT_SIZE].flag = TEST_CASE(__VA_ARGS__); \
+    AU_STAT[AU_STAT_SIZE].id = ID; \
+    AU_STAT_SIZE += 1; \
 } while (0)
 
 #endif // _AVRUNIT_H
