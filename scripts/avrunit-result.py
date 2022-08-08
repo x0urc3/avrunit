@@ -11,7 +11,6 @@ AU_F_FAIL = 1
 AU_F_SIZE = 4
 
 stat_t_size = 1 + 10
-stat_fmt_t_size = 2 + 2
 
 def help():
     print("USAGE: " + sys.argv[0] + " <file>")
@@ -29,17 +28,22 @@ def au_unpack(t_size, fmt, addr, flag_count):
 def print_stat(flag_count):
     for flag in range(flag_count):
 
-        flag_label = stat_fmt[flag][0].decode()
+        flag_label = stat_fmt[flag][0]
         flag_data = str(stat[flag][0])
 
-        id_label = stat_fmt[flag][1].decode()
+        id_label = stat_fmt[flag][1]
         id_data = [hex(i) for i in stat[flag][1:] if (i)]
         id_data = ", ".join(id_data)
 
         print(flag_label+":"+flag_data+"\t"+id_label+":"+id_data)
 
 stat = []
-stat_fmt = []
+stat_fmt = [
+        ['P ','ID'],
+        ['F ','ID'],
+        ['B ','ID'],
+        ['I ','ID']
+        ]
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -49,10 +53,6 @@ if __name__ == '__main__':
 
     #unpack stat_t
     stat = au_unpack(stat_t_size, 'B10B', 0, AU_F_SIZE)
-
-    #unpack stat_fmt
-    addr = stat_t_size * AU_F_SIZE
-    stat_fmt = au_unpack(stat_fmt_t_size, '2s2s', addr, AU_F_SIZE)
 
     print_stat(AU_F_SIZE)
 

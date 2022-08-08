@@ -29,18 +29,6 @@ typedef struct {
 
 stat_t AU_STAT[AU_F_SIZE];
 
-typedef struct {
-    char label_index[2];
-    char label_id[2];
-} stat_fmt_t;
-
-stat_fmt_t AU_STAT_FMT[AU_F_SIZE] = {
-    {"P ", "ID"},
-    {"F ", "ID"},
-    {"B ", "ID"},
-    {"I ", "ID"}
-};
-
 #ifdef AU_SERIAL
 #include <util/setbaud.h>
 
@@ -81,8 +69,6 @@ static void au_output_serial(void) {
 static void au_output_eeprom(void) {
     int addr = AU_EEPROM_START;
     eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
-    addr = sizeof(AU_STAT);
-    eeprom_write_block(&AU_STAT_FMT, (void *)addr, sizeof(AU_STAT_FMT));
 }
 
 static void au_output(void) {
