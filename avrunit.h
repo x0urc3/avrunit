@@ -15,7 +15,7 @@
 #define AU_EEPROM_START 0
 #endif
 
-#define AU_MAX_TEST 10
+#define AU_MAX_TEST 20
 #define AU_F_PASS 0
 #define AU_F_FAIL 1
 #define AU_F_BROKEN 2
@@ -25,10 +25,14 @@
 typedef struct {
     uint8_t flag;
     uint8_t id;
+} record_t;
+
+typedef struct {
+    uint16_t size;
+    record_t record[AU_MAX_TEST];
 } stat_t;
 
-stat_t AU_STAT[AU_MAX_TEST];
-uint16_t AU_STAT_SIZE = 0;
+stat_t AU_STAT;
 
 #ifdef AU_SERIAL
 #include <util/setbaud.h>
@@ -69,8 +73,6 @@ static void au_output_serial(void) {
 
 static void au_output_eeprom(void) {
     int addr = AU_EEPROM_START;
-    eeprom_write_word((void *)addr, AU_STAT_SIZE);
-    addr = addr + sizeof(AU_STAT_SIZE);
     eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
 }
 
@@ -91,9 +93,10 @@ static void au_output(void) {
 #define AU_UNIT_END do { return AU_F_PASS; } while(0)
 
 #define AU_RUN_TEST(ID, TEST_CASE, ...) do { \
-    AU_STAT[AU_STAT_SIZE].flag = TEST_CASE(__VA_ARGS__); \
-    AU_STAT[AU_STAT_SIZE].id = ID; \
-    AU_STAT_SIZE += 1; \
+    int index = AU_STAT.size; \
+    AU_STAT.record[index].flag = TEST_CASE(__VA_ARGS__); \
+    AU_STAT.record[index].id = ID; \
+    AU_STAT.size += 1; \
 } while (0)
 
 #endif // _AVRUNIT_H
