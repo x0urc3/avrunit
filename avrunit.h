@@ -71,10 +71,12 @@ static void au_output_serial(void) {
 }
 #endif // AU_SERIAL
 
+#ifndef AU_SERIAL
 static void au_output_eeprom(void) {
     int addr = AU_EEPROM_START;
     eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
 }
+#endif
 
 static void au_output(void) {
     au_output_eeprom();
