@@ -54,7 +54,7 @@ function(add_avr_test FIRMWARE)
             )
         set_tests_properties(AU_get_result PROPERTIES FIXTURES_SETUP AU_TEST_FIXTURES)
         add_test(NAME ${FIRMWARE}
-            COMMAND ${AVRUNIT_RUNTEST_CMD} ${FIRMWARE}.bin
+            COMMAND ${AVRUNIT_RUNTEST_CMD} -f ${FIRMWARE}.bin
             )
         set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
     endif()

@@ -1,6 +1,6 @@
 file(COPY pass.bin DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_test(NAME TEST_runtest_script_pass
-    COMMAND ${AVRUNIT_DEFAULT_RUNTEST_CMD} pass.bin
+    COMMAND ${AVRUNIT_DEFAULT_RUNTEST_CMD} -f pass.bin
     )
 set_tests_properties(TEST_runtest_script_pass
     PROPERTIES PASS_REGULAR_EXPRESSION
@@ -9,7 +9,7 @@ set_tests_properties(TEST_runtest_script_pass
 
 file(COPY fail.bin DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_test(NAME TEST_runtest_script_fail
-    COMMAND ${AVRUNIT_DEFAULT_RUNTEST_CMD} fail.bin
+    COMMAND ${AVRUNIT_DEFAULT_RUNTEST_CMD} -f fail.bin
     )
 set_tests_properties(TEST_runtest_script_fail
     PROPERTIES PASS_REGULAR_EXPRESSION

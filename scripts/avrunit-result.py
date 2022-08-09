@@ -6,6 +6,7 @@
 
 import sys
 import struct
+import argparse
 
 AU_F_FAIL = 1
 AU_F_SIZE = 4
@@ -47,10 +48,21 @@ stat_fmt = [
         ]
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        help()
-    with open(sys.argv[1], 'rb') as f:
-        data = f.read()
+    parser = argparse.ArgumentParser(
+            description="Dump avrunit result from EEPROM or Serial")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-f", "--file", help="EEPROM dump file")
+    group.add_argument("-p", "--port", help="Serial port")
+    parser.add_argument("-b", "--baud", type=int, help="Serial baud rate")
+    args = parser.parse_args()
+    if (args.port and args.baud is None):
+        parser.error('Serial port requires --baud argument')
+
+    if (args.file):
+        with open(args.file, 'rb') as f:
+            data = f.read()
+    elif (args.port):
+        exit()
 
     stat_size = struct.unpack('H',data[0:2])[0]
 
