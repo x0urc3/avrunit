@@ -10,17 +10,21 @@ import argparse
 import serial
 import time
 
+AU_MAX_TEST = 20
 AU_F_FAIL = 1
 AU_F_SIZE = 4
+
+sizeof_stat_t_size = 2
+sizeof_record_t = 2
 
 def help():
     print("USAGE: " + sys.argv[0] + " <file>")
 
-def au_unpack(stat_size, t_size, fmt, addr, flag_count):
+def au_unpack(record_size, t_size, fmt, addr, flag_count):
 
     res =  [ [0] for i in range(flag_count) ]
 
-    for i in range(stat_size):
+    for i in range(record_size):
         start = addr
         end = start + t_size
         flag, id_test = struct.unpack(fmt, data[start:end])
@@ -29,20 +33,20 @@ def au_unpack(stat_size, t_size, fmt, addr, flag_count):
         addr += t_size
     return res
 
-def print_stat(flag_count):
+def print_record(flag_count):
     for flag in range(flag_count):
 
-        flag_label = stat_fmt[flag][0]
-        flag_data = str(stat[flag][0])
+        flag_label = record_fmt[flag][0]
+        flag_data = str(record[flag][0])
 
-        id_label = stat_fmt[flag][1]
-        id_data = [hex(i) for i in stat[flag][1:] if (i)]
+        id_label = record_fmt[flag][1]
+        id_data = [hex(i) for i in record[flag][1:] if (i)]
         id_data = ", ".join(id_data)
 
         print(flag_label+":"+flag_data+"\t"+id_label+":"+id_data)
 
-stat = []
-stat_fmt = [
+record = []
+record_fmt = [
         ['P ','ID'],
         ['F ','ID'],
         ['B ','ID'],
@@ -69,14 +73,11 @@ if __name__ == '__main__':
         time.sleep(2)
         s.write(b'r')
 
-        data = s.read(2+(2*20))
+        data = s.read(sizeof_stat_t_size + (sizeof_record_t*AU_MAX_TEST))
 
-    stat_size = struct.unpack('H',data[0:2])[0]
+    record_size = struct.unpack('H', data[0:sizeof_stat_t_size])[0]
+    record = au_unpack(record_size, sizeof_record_t, 'BB', 2, AU_F_SIZE)
 
-    #unpack stat_t
-    stat_t_size = 2
-    stat = au_unpack(stat_size, stat_t_size, 'BB', 2, AU_F_SIZE)
+    print_record(AU_F_SIZE)
 
-    print_stat(AU_F_SIZE)
-
-    sys.exit(stat[AU_F_FAIL][0])
+    sys.exit(record[AU_F_FAIL][0])
