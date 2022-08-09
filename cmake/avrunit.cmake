@@ -1,6 +1,6 @@
 if (AVR_BOARD_ARDUINO)
     set(AVRUNIT_RUNTEST_OUTPUT "Serial" CACHE STRING "Set result output" FORCE)
-    message(WARNING "AVRUNIT_RUNTEST_OUTPUT=Serial since Arduino does not support EEPROM dump")
+    message(STATUS "AVRUNIT_RUNTEST_OUTPUT=Serial since Arduino does not support EEPROM dump")
 else()
     set(AVRUNIT_RUNTEST_OUTPUT "EEPROM" CACHE STRING "Set result output" FORCE)
 endif()
@@ -61,7 +61,7 @@ function(add_avr_test FIRMWARE)
 
     if (AVRUNIT_RUNTEST_OUTPUT STREQUAL "Serial")
         add_test(NAME ${FIRMWARE}
-            COMMAND ${AVRUNIT_RUNTEST_CMD}
+            COMMAND ${AVRUNIT_RUNTEST_CMD} -p ${TOOL_UPLOAD_PORT} -b ${AVR_BAUD}
             )
         set_tests_properties( ${FIRMWARE} PROPERTIES FIXTURES_REQUIRED AU_TEST_FIXTURES)
     endif()
