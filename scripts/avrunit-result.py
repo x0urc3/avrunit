@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 # avrunit-result.py Copyright (c) 2022 Khairulmizam Samsudin <xource@gmail.com>
 #
-# Unpack avrunit result from AVR eeprom dump
+# Unpack avrunit result from AVR eeprom or serial dump
 #
 
 import sys
 import struct
 import argparse
+import serial
+import time
 
 AU_F_FAIL = 1
 AU_F_SIZE = 4
@@ -62,7 +64,12 @@ if __name__ == '__main__':
         with open(args.file, 'rb') as f:
             data = f.read()
     elif (args.port):
-        exit()
+        s = serial.Serial(args.port, args.baud)
+
+        time.sleep(2)
+        s.write(b'r')
+
+        data = s.read(2+(2*20))
 
     stat_size = struct.unpack('H',data[0:2])[0]
 
