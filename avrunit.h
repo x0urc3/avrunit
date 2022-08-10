@@ -37,12 +37,12 @@ stat_t AU_STAT;
 #ifdef AU_SERIAL
 #include <util/setbaud.h>
 
-#define usart_txReady()       (bit_is_set(UCSR0A, UDRE0))
-#define usart_rxReady()       (bit_is_set(UCSR0A, RXC0))
-#define usart_txWait()        ({loop_until_bit_is_set(UCSR0A, UDRE0);})
-#define usart_rxWait()        ({loop_until_bit_is_set(UCSR0A, RXC0);})
-#define usart_txByte(data)    (UDR0 = data)
-#define usart_rxByte()        (UDR0)
+#define USART_txReady()       (bit_is_set(UCSR0A, UDRE0))
+#define USART_rxReady()       (bit_is_set(UCSR0A, RXC0))
+#define USART_txWait()        ({loop_until_bit_is_set(UCSR0A, UDRE0);})
+#define USART_rxWait()        ({loop_until_bit_is_set(UCSR0A, RXC0);})
+#define USART_txByte(d)       (UDR0 = d)
+#define USART_rxByte()        (UDR0)
 
 static void USART_init(void) {
   UBRR0H = UBRRH_VALUE;         // defined in setbaud.h & requires BAUD
@@ -57,30 +57,47 @@ static void USART_init(void) {
   UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);   // 8 data bits, 1 stop bit
 }
 
-static void usart_txString(char data[]) {
-  uint8_t i = 0;
-  while (data[i]) {
-      usart_txWait();
-      usart_txByte(data[i]);
-      i++;
-  }
+static void au_wait_serial(uint8_t cmd) {
+    uint8_t c;
+    while (c != cmd) {
+        USART_rxWait();
+        c = USART_rxByte();
+    }
+}
+
+static void au_send_serial(uint8_t *data, uint16_t size) {
+    uint8_t *byte;
+    for (byte = data; size > 0 ; size--, ++byte) {
+        USART_txWait();
+        USART_txByte(*byte);
+    }
 }
 
 static void au_output_serial(void) {
     USART_init();
+    au_wait_serial('r');
+    au_send_serial((uint8_t *)&AU_STAT, sizeof(AU_STAT));
+
 }
 #endif // AU_SERIAL
 
+#ifndef AU_SERIAL
 static void au_output_eeprom(void) {
     int addr = AU_EEPROM_START;
     eeprom_write_block(&AU_STAT, (void *)addr, sizeof(AU_STAT));
 }
+#endif
 
 static void au_output(void) {
+
+#ifndef AU_SERIAL
     au_output_eeprom();
+#endif
+
 #ifdef AU_SERIAL
     au_output_serial();
-#endif // AU_SERIAL
+#endif
+
 }
 
 #define AU_OUTPUT_SETUP()
