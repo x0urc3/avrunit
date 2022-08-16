@@ -103,6 +103,7 @@ static void au_output(void) {
 #define AU_OUTPUT_SETUP()
 #define AU_OUTPUT() au_output()
 #define AU_ASSERT(TEST) do { if (!(TEST)) { return AU_F_FAIL; } } while (0)
+#define AU_ASSERT_FAIL(TEST) do { if ((TEST)) { return AU_F_FAIL; } } while (0)
 #define AU_BROKEN(TEST) do { return AU_F_BROKEN; } while (0)
 #define AU_IGNORED(TEST) do { return AU_F_IGNORE; } while (0)
 
